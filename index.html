@@ -455,7 +455,7 @@ textarea { min-height: 68px; }
       </div>
       <div class="api-key-hint">
         Get a free key at <a href="https://console.anthropic.com/keys" target="_blank" rel="noopener">console.anthropic.com</a>.
-        Your key is stored only in this browser tab — never sent anywhere except Anthropic's API.
+        Key is saved in your browser and restored on refresh. <a href="#" onclick="clearApiKey();return false;">Clear saved key</a>.
       </div>
     </div>
 
@@ -632,22 +632,38 @@ function saveApiKey() {
   const key = input.value.trim();
   if (!key) { alert('Please paste your Anthropic API key first.'); return; }
   if (!key.startsWith('sk-ant-')) {
-    alert('That doesn\'t look like an Anthropic API key (should start with sk-ant-…). Please check and try again.');
+    alert("That doesn't look like an Anthropic API key (should start with sk-ant-…). Please check and try again.");
     return;
   }
   ANTHROPIC_API_KEY = key;
-  // Update UI to connected state
-  const banner = document.getElementById('apiKeyBanner');
-  banner.classList.add('connected');
+  try { localStorage.setItem('rf_anthropic_key', key); } catch(e) {}
+  setKeyConnected();
+}
+
+function setKeyConnected() {
+  document.getElementById('apiKeyBanner').classList.add('connected');
   document.getElementById('apiKeyLabel').textContent = '✓ API key saved — AI features ready';
+  const input = document.getElementById('apiKeyInput');
   input.value = '••••••••••••••••';
   input.type = 'password';
 }
+
+// Auto-load key from localStorage on page open
+(function loadSavedKey() {
+  try {
+    const saved = localStorage.getItem('rf_anthropic_key');
+    if (saved && saved.startsWith('sk-ant-')) {
+      ANTHROPIC_API_KEY = saved;
+      setKeyConnected();
+    }
+  } catch(e) {}
+})();
 
 function getKey() {
   if (!ANTHROPIC_API_KEY) throw new Error('No API key set. Please enter your Anthropic API key in the banner above.');
   return ANTHROPIC_API_KEY;
 }
+
 
 // ══════════════════════════════════════════════════════════════════
 // DRAG & DROP
@@ -742,7 +758,7 @@ async function aiParseResume(text) {
     },
     body: JSON.stringify({
       model: 'claude-sonnet-4-20250514',
-      max_tokens: 1000,
+      max_tokens: 4000,
       messages: [{
         role: 'user',
         content: `Parse the following resume text and return ONLY a valid JSON object with exactly this structure. Use empty string "" if a field is not found. Use empty array [] if no items found.
@@ -767,10 +783,11 @@ Rules:
 - "skills": comma-separated string of all skills
 - "bullets": newline-separated string of bullet point descriptions for each job
 - "end": use "Present" if the person currently works there
+- Keep bullet text concise (max 120 chars per bullet)
 - Return ONLY the JSON. No markdown code fences. No commentary before or after.
 
 RESUME TEXT:
-${text.slice(0, 6000)}`
+${text.slice(0, 8000)}\`
       }]
     })
   });
@@ -778,8 +795,38 @@ ${text.slice(0, 6000)}`
   const data = await resp.json();
   if (data.error) throw new Error(data.error.message);
   const raw = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
-  const clean = raw.replace(/```json|```/g, '').trim();
-  return JSON.parse(clean);
+  const clean = raw.replace(/\`\`\`json|\`\`\`/g, '').trim();
+
+  // Attempt to repair truncated JSON before parsing
+  function repairJSON(s) {
+    // Close any open arrays and objects from the end
+    const opens = [];
+    let inStr = false, esc = false;
+    for (let i = 0; i < s.length; i++) {
+      const c = s[i];
+      if (esc) { esc = false; continue; }
+      if (c === '\\' && inStr) { esc = true; continue; }
+      if (c === '"') { inStr = !inStr; continue; }
+      if (inStr) continue;
+      if (c === '{') opens.push('}');
+      else if (c === '[') opens.push(']');
+      else if (c === '}' || c === ']') opens.pop();
+    }
+    // If we're mid-string, close it
+    let repaired = s;
+    if (inStr) repaired += '"';
+    return repaired + opens.reverse().join('');
+  }
+
+  try {
+    return JSON.parse(clean);
+  } catch (e) {
+    try {
+      return JSON.parse(repairJSON(clean));
+    } catch (e2) {
+      throw new Error('Could not parse AI response as JSON. Try a shorter resume or a .txt file.');
+    }
+  }
 }
 
 function populateFromParsed(p) {
