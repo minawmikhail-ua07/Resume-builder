@@ -350,52 +350,80 @@ textarea { min-height: 68px; }
 .theme-minimal .r-skill-tag { background: none; color: #444; border: 1px solid #ccc; padding: 2px 10px; border-radius: 4px; font-size: 8.5pt; }
 
 /* ── Print ───────────────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────────
+   @page margin:0 is the ONLY reliable way to strip the browser's
+   built-in header/footer (title, URL, date/time).
+   Visual padding is handled on #resume instead.
+───────────────────────────────────────────────────────────────── */
 @page {
   size: A4;
-  margin: 14mm 16mm;       /* page margins — removes browser header/footer */
+  margin: 0 !important;
 }
 
 @media print {
-  html, body { overflow: visible; height: auto; }
-  .topbar, .sidebar, .ai-overlay, .diff-popup, .career-advisor-modal { display: none !important; }
-  .preview-pane {
-    padding: 0; background: #fff !important;
-    overflow: visible; display: block;
-    width: 100%; height: auto;
+  html, body {
+    overflow: visible !important;
+    height: auto !important;
+    background: #fff !important;
   }
-  .main { overflow: visible; height: auto; }
 
-  /* Resume fills the page — no extra padding since @page handles margins */
+  /* Hide every UI element except the resume */
+  .topbar, .sidebar, .ai-overlay, .diff-popup,
+  .ca-modal-backdrop, .upload-zone, .api-key-banner { display: none !important; }
+
+  .preview-pane {
+    padding: 0 !important;
+    background: #fff !important;
+    overflow: visible !important;
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+  }
+  .main { overflow: visible !important; height: auto !important; }
+
+  /* Resume: full A4 width, padding replaces the @page margins we zeroed out */
   #resume {
     box-shadow: none !important;
     border-radius: 0 !important;
-    width: 100% !important;
+    width: 210mm !important;
     min-height: unset !important;
-    margin: 0;
-    padding: 0 !important;
+    margin: 0 auto !important;
+    /* Replicate the 14mm/16mm margins as internal padding so content
+       doesn't touch the paper edge even though @page margin is 0 */
+    padding: 14mm 16mm !important;
   }
 
-  /* Two-column modern theme */
-  #resume.theme-modern { min-height: unset !important; }
-  #resume.theme-modern .resume-sidebar-col { padding: 28px 16px !important; }
-  #resume.theme-modern .resume-main-col    { padding: 28px 24px !important; }
+  /* Two-column themes: override the padding to their own inner spacing */
+  #resume.theme-modern .resume-sidebar-col,
+  #resume.theme-bold   .resume-sidebar-col { padding: 28px 18px !important; }
+  #resume.theme-modern .resume-main-col,
+  #resume.theme-bold   .resume-main-col    { padding: 28px 24px !important; }
+  #resume.theme-modern,
+  #resume.theme-bold   { padding: 0 !important; min-height: unset !important; }
 
-  /* Add top padding to content that lands at top of page 2+ */
+  /* Timeline left-rail: preserve its left-padding for the rail dots */
+  #resume.theme-timeline { padding: 14mm 16mm 14mm 24mm !important; }
+
+  /* Compact has tighter padding by design */
+  #resume.theme-compact { padding: 10mm 12mm !important; }
+
+  /* Page-break control: allow sections to span pages, keep individual jobs intact */
+  #resume section,
+  #resume .resume-section { page-break-inside: auto !important; break-inside: auto !important; }
+  #resume article         { page-break-inside: avoid !important; break-inside: avoid !important; orphans: 3; widows: 3; }
+  #resume header          { page-break-after: avoid !important;  break-after: avoid !important; }
+  #resume h2              { page-break-after: avoid !important;  break-after: avoid !important; }
+  #resume .r-skills-grid  { page-break-inside: auto !important;  break-inside: auto !important; }
+
+  /* Section spacing on page 2+ */
   #resume section + section,
   #resume .resume-section + .resume-section { padding-top: 4mm; }
 
-  /* Allow sections to break across pages naturally but keep article intact */
-  #resume section,
-  #resume .resume-section { page-break-inside: auto; break-inside: auto; }
-  #resume article         { page-break-inside: avoid; break-inside: avoid; orphans: 3; widows: 3; }
-  #resume header          { page-break-after:  avoid; break-after:  avoid; }
-  #resume h2              { page-break-after:  avoid; break-after:  avoid; }
-
-  /* Skills — allow wrapping across pages but don't orphan the heading */
-  #resume .r-skills-grid  { page-break-inside: auto;  break-inside: auto; }
-
-  /* Ensure first element on a new page gets breathing room */
-  #resume * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  /* Force background colours and images to print */
+  #resume, #resume * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
 }
 
 /* ── Responsive ──────────────────────────────────────────── */
@@ -1791,11 +1819,13 @@ function printResume() {
   const shown = (() => { try { return localStorage.getItem(key); } catch(e){ return null; } })();
   if (!shown) {
     alert(
-      'Tip for a clean PDF:\n\n' +
-      'In the print dialog that opens:\n' +
-      '  • Set Margins to: None (or Minimum)\n' +
-      '  • UNCHECK "Headers and footers"\n' +
-      '  • CHECK "Background graphics" (for colored themes)\n\n' +
+      'For a clean PDF — do this once in the print dialog:\n\n' +
+      '  1. Margins  →  set to "None"\n' +
+      '  2. Headers and footers  →  UNCHECK (removes URL, date, title)\n' +
+      '  3. Background graphics  →  CHECK (keeps colors & sidebar)\n\n' +
+      'Chrome: More settings → find these options\n' +
+      'Safari: Show Details → uncheck "Print headers and footers"\n' +
+      'Firefox: Page Setup → Margins & Header/Footer\n\n' +
       '(This tip will not show again.)'
     );
     try { localStorage.setItem(key, '1'); } catch(e) {}
