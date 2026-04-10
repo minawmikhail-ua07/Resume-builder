@@ -350,11 +350,43 @@ textarea { min-height: 68px; }
 .theme-minimal .r-skill-tag { background: none; color: #444; border: 1px solid #ccc; padding: 2px 10px; border-radius: 4px; font-size: 8.5pt; }
 
 /* ── Print ───────────────────────────────────────────────── */
+@page {
+  size: A4;
+  margin: 0;               /* removes browser header/footer (date, URL, title) */
+}
+
 @media print {
-  body { overflow: visible; }
+  html, body { overflow: visible; height: auto; }
   .topbar, .sidebar, .ai-overlay, .diff-popup { display: none !important; }
-  .preview-pane { padding: 0; background: #fff; overflow: visible; }
-  #resume { box-shadow: none; border-radius: 0; width: 100%; min-height: unset; }
+  .preview-pane {
+    padding: 0; background: #fff !important;
+    overflow: visible; display: block;
+    width: 100%; height: auto;
+  }
+  .main { overflow: visible; height: auto; }
+
+  /* Resume fills the page exactly */
+  #resume {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    width: 210mm !important;       /* A4 width */
+    min-height: unset !important;
+    margin: 0 auto;
+    padding: 14mm 16mm !important; /* consistent margins */
+  }
+
+  /* Two-column modern theme needs explicit height reset */
+  #resume.theme-modern { min-height: unset !important; }
+
+  /* Prevent sections from splitting across pages awkwardly */
+  #resume section,
+  #resume .resume-section { page-break-inside: avoid; break-inside: avoid; }
+  #resume article         { page-break-inside: avoid; break-inside: avoid; }
+  #resume header          { page-break-after:  avoid; break-after:  avoid; }
+
+  /* Skills grid — keep together */
+  #resume .r-skills-grid,
+  #resume [id*="skills"]  { page-break-inside: avoid; break-inside: avoid; }
 }
 
 /* ── Responsive ──────────────────────────────────────────── */
@@ -433,7 +465,7 @@ textarea { min-height: 68px; }
 
   <div class="topbar-right">
     <button class="btn btn-secondary" onclick="clearAll()">Clear</button>
-    <button class="btn btn-primary" onclick="window.print()">⬇ Save PDF</button>
+    <button class="btn btn-primary" onclick="printResume()">⬇ Save PDF</button>
   </div>
 </div>
 
@@ -1248,6 +1280,25 @@ function clearAll() {
 }
 
 // ══════════════════════════════════════════════════════════════════
+// PRINT
+// ════════════════════════════════════════════════════════════════
+function printResume() {
+  const key = 'rf_print_tip_shown';
+  const shown = (() => { try { return localStorage.getItem(key); } catch(e){ return null; } })();
+  if (!shown) {
+    alert(
+      'Tip for a clean PDF:\n\n' +
+      'In the print dialog that opens:\n' +
+      '  • Set Margins to: None (or Minimum)\n' +
+      '  • UNCHECK "Headers and footers"\n' +
+      '  • CHECK "Background graphics" (for colored themes)\n\n' +
+      '(This tip will not show again.)'
+    );
+    try { localStorage.setItem(key, '1'); } catch(e) {}
+  }
+  window.print();
+}
+
 // INIT
 // ══════════════════════════════════════════════════════════════════
 loadSavedKey();
