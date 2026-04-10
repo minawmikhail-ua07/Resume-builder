@@ -627,37 +627,65 @@ function hideOverlay() {
 // ══════════════════════════════════════════════════════════════════
 let ANTHROPIC_API_KEY = '';
 
+// ── Simple in-memory storage fallback when localStorage is unavailable ──
+const store = (() => {
+  let mem = {};
+  const ls = (() => { try { localStorage.setItem('_t','1'); localStorage.removeItem('_t'); return true; } catch(e) { return false; } })();
+  return {
+    get(k)    { return ls ? localStorage.getItem(k)    : (mem[k] || null); },
+    set(k, v) { ls ? localStorage.setItem(k, v)        : (mem[k] = v); },
+    del(k)    { ls ? localStorage.removeItem(k)        : (delete mem[k]); }
+  };
+})();
+
 function saveApiKey() {
   const input = document.getElementById('apiKeyInput');
-  const key = input.value.trim();
+  const key = (input.value || '').trim();
   if (!key) { alert('Please paste your Anthropic API key first.'); return; }
-  if (!key.startsWith('sk-ant-')) {
-    alert("That doesn't look like an Anthropic API key (should start with sk-ant-…). Please check and try again.");
+  // Accept sk-ant- keys as well as newer key formats (sk-)
+  if (!key.startsWith('sk-')) {
+    alert("That doesn't look like an Anthropic API key (should start with sk-). Please check and try again.");
     return;
   }
   ANTHROPIC_API_KEY = key;
-  try { localStorage.setItem('rf_anthropic_key', key); } catch(e) {}
+  try { store.set('rf_anthropic_key', key); } catch(e) {}
   setKeyConnected();
 }
 
 function setKeyConnected() {
-  document.getElementById('apiKeyBanner').classList.add('connected');
-  document.getElementById('apiKeyLabel').textContent = '✓ API key saved — AI features ready';
-  const input = document.getElementById('apiKeyInput');
+  const banner = document.getElementById('apiKeyBanner');
+  const label  = document.getElementById('apiKeyLabel');
+  const input  = document.getElementById('apiKeyInput');
+  if (!banner || !label || !input) return; // DOM not ready yet, will retry
+  banner.classList.add('connected');
+  label.textContent = '✓ API key saved — AI features ready';
   input.value = '••••••••••••••••';
   input.type = 'password';
 }
 
-// Auto-load key from localStorage on page open
-(function loadSavedKey() {
+function clearApiKey() {
+  ANTHROPIC_API_KEY = '';
+  try { store.del('rf_anthropic_key'); } catch(e) {}
+  const banner = document.getElementById('apiKeyBanner');
+  const label  = document.getElementById('apiKeyLabel');
+  const input  = document.getElementById('apiKeyInput');
+  if (!banner || !label || !input) return;
+  banner.classList.remove('connected');
+  label.textContent = 'AI features need your Anthropic API key';
+  input.value = '';
+  input.type = 'password';
+}
+
+// Auto-load saved key — deferred until DOM is ready
+function loadSavedKey() {
   try {
-    const saved = localStorage.getItem('rf_anthropic_key');
-    if (saved && saved.startsWith('sk-ant-')) {
+    const saved = store.get('rf_anthropic_key');
+    if (saved && saved.startsWith('sk-')) {
       ANTHROPIC_API_KEY = saved;
       setKeyConnected();
     }
   } catch(e) {}
-})();
+}
 
 function getKey() {
   if (!ANTHROPIC_API_KEY) throw new Error('No API key set. Please enter your Anthropic API key in the banner above.');
@@ -787,7 +815,7 @@ Rules:
 - Return ONLY the JSON. No markdown code fences. No commentary before or after.
 
 RESUME TEXT:
-${text.slice(0, 8000)}\`
+${text.slice(0, 8000)}`
       }]
     })
   });
@@ -795,7 +823,7 @@ ${text.slice(0, 8000)}\`
   const data = await resp.json();
   if (data.error) throw new Error(data.error.message);
   const raw = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
-  const clean = raw.replace(/\`\`\`json|\`\`\`/g, '').trim();
+  const clean = raw.replace(/```json|```/g, '').trim();
 
   // Attempt to repair truncated JSON before parsing
   function repairJSON(s) {
@@ -1222,6 +1250,7 @@ function clearAll() {
 // ══════════════════════════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════════════════════════
+loadSavedKey();
 addExperience();
 addEducation();
 update();
