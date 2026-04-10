@@ -352,12 +352,12 @@ textarea { min-height: 68px; }
 /* ── Print ───────────────────────────────────────────────── */
 @page {
   size: A4;
-  margin: 0;               /* removes browser header/footer (date, URL, title) */
+  margin: 14mm 16mm;       /* page margins — removes browser header/footer */
 }
 
 @media print {
   html, body { overflow: visible; height: auto; }
-  .topbar, .sidebar, .ai-overlay, .diff-popup { display: none !important; }
+  .topbar, .sidebar, .ai-overlay, .diff-popup, .career-advisor-modal { display: none !important; }
   .preview-pane {
     padding: 0; background: #fff !important;
     overflow: visible; display: block;
@@ -365,28 +365,37 @@ textarea { min-height: 68px; }
   }
   .main { overflow: visible; height: auto; }
 
-  /* Resume fills the page exactly */
+  /* Resume fills the page — no extra padding since @page handles margins */
   #resume {
     box-shadow: none !important;
     border-radius: 0 !important;
-    width: 210mm !important;       /* A4 width */
+    width: 100% !important;
     min-height: unset !important;
-    margin: 0 auto;
-    padding: 14mm 16mm !important; /* consistent margins */
+    margin: 0;
+    padding: 0 !important;
   }
 
-  /* Two-column modern theme needs explicit height reset */
+  /* Two-column modern theme */
   #resume.theme-modern { min-height: unset !important; }
+  #resume.theme-modern .resume-sidebar-col { padding: 28px 16px !important; }
+  #resume.theme-modern .resume-main-col    { padding: 28px 24px !important; }
 
-  /* Prevent sections from splitting across pages awkwardly */
+  /* Add top padding to content that lands at top of page 2+ */
+  #resume section + section,
+  #resume .resume-section + .resume-section { padding-top: 4mm; }
+
+  /* Allow sections to break across pages naturally but keep article intact */
   #resume section,
-  #resume .resume-section { page-break-inside: avoid; break-inside: avoid; }
-  #resume article         { page-break-inside: avoid; break-inside: avoid; }
+  #resume .resume-section { page-break-inside: auto; break-inside: auto; }
+  #resume article         { page-break-inside: avoid; break-inside: avoid; orphans: 3; widows: 3; }
   #resume header          { page-break-after:  avoid; break-after:  avoid; }
+  #resume h2              { page-break-after:  avoid; break-after:  avoid; }
 
-  /* Skills grid — keep together */
-  #resume .r-skills-grid,
-  #resume [id*="skills"]  { page-break-inside: avoid; break-inside: avoid; }
+  /* Skills — allow wrapping across pages but don't orphan the heading */
+  #resume .r-skills-grid  { page-break-inside: auto;  break-inside: auto; }
+
+  /* Ensure first element on a new page gets breathing room */
+  #resume * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
 
 /* ── Responsive ──────────────────────────────────────────── */
@@ -399,6 +408,107 @@ textarea { min-height: 68px; }
   #resume.theme-classic, #resume.theme-executive, #resume.theme-minimal { padding: 24px 18px; }
   #resume.theme-modern { grid-template-columns: 170px 1fr; }
 }
+
+/* ── Career Advisor Modal ────────────────────────────────── */
+.ca-modal-backdrop {
+  position: fixed; inset: 0; z-index: 9998;
+  background: rgba(0,0,0,.5); backdrop-filter: blur(4px);
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 24px 16px; overflow-y: auto;
+}
+.ca-modal-backdrop.hidden { display: none; }
+
+.ca-modal {
+  background: var(--panel); border-radius: 16px;
+  width: min(780px, 100%); box-shadow: 0 24px 80px rgba(0,0,0,.3);
+  overflow: hidden; animation: caSlideIn .25s ease;
+}
+@keyframes caSlideIn { from { opacity:0; transform:translateY(-16px); } to { opacity:1; transform:translateY(0); } }
+
+.ca-modal-header {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  padding: 22px 28px; display: flex; align-items: center; gap: 14px;
+}
+.ca-modal-logo {
+  width: 46px; height: 46px; border-radius: 12px;
+  background: linear-gradient(135deg, #e94560, #f5a623);
+  display: grid; place-items: center; font-size: 1.4rem; flex-shrink: 0;
+}
+.ca-modal-title { flex: 1; }
+.ca-modal-title h2 { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 2px; }
+.ca-modal-title p  { font-size: .76rem; color: rgba(255,255,255,.6); }
+.ca-modal-close {
+  background: rgba(255,255,255,.1); border: none; color: #fff;
+  width: 32px; height: 32px; border-radius: 8px; font-size: 1rem;
+  cursor: pointer; display: grid; place-items: center; transition: background .15s;
+}
+.ca-modal-close:hover { background: rgba(255,255,255,.2); }
+
+.ca-modal-body { padding: 0; }
+
+.ca-generate-area {
+  padding: 24px 28px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+}
+.ca-generate-area p { font-size: .82rem; color: var(--muted); flex: 1; min-width: 200px; }
+.btn-ca-generate {
+  padding: 9px 20px; background: linear-gradient(135deg, #e94560, #f5a623);
+  color: #fff; border: none; border-radius: 8px;
+  font-family: 'DM Sans', sans-serif; font-size: .84rem; font-weight: 700;
+  cursor: pointer; white-space: nowrap; transition: filter .15s; flex-shrink: 0;
+}
+.btn-ca-generate:hover { filter: brightness(1.1); }
+.btn-ca-generate:disabled { opacity: .6; cursor: wait; }
+
+.ca-report { padding: 0; }
+.ca-report.hidden { display: none; }
+
+.ca-section {
+  padding: 18px 28px; border-bottom: 1px solid var(--border);
+}
+.ca-section:last-child { border-bottom: none; }
+.ca-section-header {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+}
+.ca-section-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  display: grid; place-items: center; font-size: 1rem; flex-shrink: 0;
+}
+.ca-section-title { font-size: .88rem; font-weight: 700; color: var(--text); }
+.ca-section-subtitle { font-size: .72rem; color: var(--muted); }
+
+.ca-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.ca-tag {
+  padding: 3px 11px; border-radius: 20px; font-size: .77rem; font-weight: 500;
+}
+.ca-tag-remove { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
+.ca-tag-add    { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+.ca-tag-role   { background: #dbeafe; color: #1e40af; border: 1px solid #bfdbfe; }
+.ca-tag-kw     { background: #fef9c3; color: #854d0e; border: 1px solid #fde68a; }
+
+.ca-list { list-style: none; padding: 0; margin: 0; }
+.ca-list li {
+  padding: 7px 0; border-bottom: 1px solid var(--border);
+  font-size: .82rem; color: var(--text); display: flex; gap: 8px; align-items: flex-start;
+}
+.ca-list li:last-child { border-bottom: none; }
+.ca-list li::before { content: attr(data-icon); flex-shrink: 0; margin-top: 1px; }
+
+.ca-loading {
+  padding: 40px 28px; text-align: center;
+}
+.ca-loading-spinner {
+  width: 40px; height: 40px; border: 3px solid var(--border);
+  border-top-color: #e94560; border-radius: 50%;
+  animation: spin .75s linear infinite; margin: 0 auto 14px;
+}
+.ca-loading p { font-size: .84rem; color: var(--muted); }
+
+.ca-empty {
+  padding: 32px 28px; text-align: center;
+  font-size: .84rem; color: var(--muted);
+}
+
 </style>
 </head>
 <body>
@@ -465,6 +575,7 @@ textarea { min-height: 68px; }
 
   <div class="topbar-right">
     <button class="btn btn-secondary" onclick="clearAll()">Clear</button>
+    <button class="btn" style="background:linear-gradient(135deg,#e94560,#f5a623);color:#fff;font-weight:700;" onclick="openAdvisor()">🎯 Career Advisor</button>
     <button class="btn btn-primary" onclick="printResume()">⬇ Save PDF</button>
   </div>
 </div>
@@ -1280,6 +1391,175 @@ function clearAll() {
 }
 
 // ══════════════════════════════════════════════════════════════════
+
+// ══════════════════════════════════════════════════════════════════
+// CAREER ADVISOR
+// ══════════════════════════════════════════════════════════════════
+function openAdvisor() {
+  document.getElementById('caBackdrop').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeAdvisor() {
+  document.getElementById('caBackdrop').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+function handleBackdropClick(e) {
+  if (e.target === document.getElementById('caBackdrop')) closeAdvisor();
+}
+
+function getResumeText() {
+  // Build a plain-text snapshot of all filled form fields
+  const lines = [];
+  const g = id => { const el = document.getElementById(id); return el ? el.value.trim() : ''; };
+
+  if (g('fullName'))  lines.push('NAME: ' + g('fullName'));
+  if (g('location'))  lines.push('LOCATION: ' + g('location'));
+  if (g('email'))     lines.push('EMAIL: ' + g('email'));
+  if (g('phone'))     lines.push('PHONE: ' + g('phone'));
+  if (g('linkedin'))  lines.push('LINKEDIN: ' + g('linkedin'));
+  if (g('summary'))   lines.push('\nSUMMARY:\n' + g('summary'));
+
+  lines.push('\nEXPERIENCE:');
+  document.querySelectorAll('.exp-entry').forEach(entry => {
+    const i = entry.dataset.idx;
+    const title   = g('exp-title-'   + i);
+    const company = g('exp-company-' + i);
+    const start   = g('exp-start-'   + i);
+    const end     = g('exp-end-'     + i);
+    const bullets = g('exp-bullets-' + i);
+    if (title || company) {
+      lines.push(title + ' at ' + company + ' (' + start + ' - ' + (end||'Present') + ')');
+      if (bullets) bullets.split('\n').forEach(b => { if (b.trim()) lines.push('  • ' + b.trim()); });
+    }
+  });
+
+  lines.push('\nEDUCATION:');
+  document.querySelectorAll('.edu-entry').forEach(entry => {
+    const i = entry.dataset.idx;
+    const degree  = g('edu-degree-' + i);
+    const school  = g('edu-school-' + i);
+    const grad    = g('edu-grad-'   + i);
+    const courses = g('edu-courses-'+ i);
+    if (degree || school) {
+      lines.push(degree + ' — ' + school + (grad ? ' (' + grad + ')' : ''));
+      if (courses) lines.push('  Coursework: ' + courses);
+    }
+  });
+
+  if (g('skills')) lines.push('\nSKILLS:\n' + g('skills'));
+  return lines.join('\n');
+}
+
+async function generateAdvisorReport() {
+  if (!ANTHROPIC_API_KEY) {
+    alert('Please save your Anthropic API key in the sidebar first.');
+    return;
+  }
+
+  const resumeText = getResumeText();
+  if (resumeText.trim().length < 50) {
+    alert('Please fill in at least some resume fields before generating a report.');
+    return;
+  }
+
+  // Show loading
+  document.getElementById('caEmpty').classList.add('hidden');
+  document.getElementById('caReport').classList.add('hidden');
+  document.getElementById('caLoading').classList.remove('hidden');
+  const btn = document.getElementById('caGenerateBtn');
+  btn.disabled = true; btn.textContent = '⏳ Analyzing…';
+
+  const prompt = `You are a Senior Career Consultant and Tech Recruiter with 15+ years of experience. Analyze this resume and return a JSON report with EXACTLY this structure (no markdown, no commentary, valid JSON only):
+
+{
+  "optimization": [
+    { "issue": "description of what to remove or tighten", "reason": "why it helps" }
+  ],
+  "skillGap": [
+    { "skill": "skill or certification name", "why": "why it matters for this career path", "level": "Beginner|Intermediate|Advanced" }
+  ],
+  "roadmap": [
+    { "month": "Month 1-3", "action": "specific course or step", "platform": "Coursera/LinkedIn Learning/etc", "outcome": "what it achieves" }
+  ],
+  "roles": ["Job Title 1", "Job Title 2", "Job Title 3", "Job Title 4", "Job Title 5"],
+  "keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5", "keyword6", "keyword7", "keyword8", "keyword9", "keyword10"]
+}
+
+Provide 3-5 items for optimization, 4-5 for skillGap, 4-6 for roadmap, 4-5 roles, 8-12 keywords.
+Be specific to the actual resume content — do not give generic advice.
+Return ONLY valid JSON. No code fences. No text before or after.
+
+RESUME:
+${resumeText}`;
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': getKey(),
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 2000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await resp.json();
+    if (data.error) throw new Error(data.error.message);
+
+    const raw = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
+    const clean = raw.replace(/```json|```/g, '').trim();
+    const report = JSON.parse(clean);
+    renderAdvisorReport(report);
+
+  } catch(e) {
+    document.getElementById('caLoading').classList.add('hidden');
+    document.getElementById('caEmpty').classList.remove('hidden');
+    document.getElementById('caEmpty').innerHTML = '<div style="font-size:2rem;margin-bottom:8px">⚠️</div><p>Error: ' + (e.message || 'unknown') + '</p>';
+  } finally {
+    btn.disabled = false; btn.textContent = '✨ Re-analyze';
+  }
+}
+
+function renderAdvisorReport(r) {
+  document.getElementById('caLoading').classList.add('hidden');
+  document.getElementById('caReport').classList.remove('hidden');
+
+  // 1. Optimization
+  const optEl = document.getElementById('ca-optimization');
+  optEl.innerHTML = (r.optimization || []).map(o =>
+    `<li data-icon="✂️"><div><strong>${esc(o.issue)}</strong><br><span style="color:var(--muted);font-size:.77rem">${esc(o.reason)}</span></div></li>`
+  ).join('') || '<li data-icon="✅">Resume looks well-optimized!</li>';
+
+  // 2. Skill Gap
+  const sgEl = document.getElementById('ca-skillgap');
+  sgEl.innerHTML = (r.skillGap || []).map(s =>
+    `<li data-icon="📈"><div><strong>${esc(s.skill)}</strong> <span class="ca-tag ca-tag-add" style="font-size:.68rem;padding:1px 7px">${esc(s.level)}</span><br><span style="color:var(--muted);font-size:.77rem">${esc(s.why)}</span></div></li>`
+  ).join('');
+  document.getElementById('ca-skillgap-tags').innerHTML =
+    (r.skillGap || []).map(s => `<span class="ca-tag ca-tag-add">${esc(s.skill)}</span>`).join('');
+
+  // 3. Roadmap
+  const rmEl = document.getElementById('ca-roadmap');
+  rmEl.innerHTML = (r.roadmap || []).map(step =>
+    `<li data-icon="🗓️"><div><strong>${esc(step.month)}:</strong> ${esc(step.action)}<br><span style="color:var(--muted);font-size:.77rem">📍 ${esc(step.platform)} — <em>${esc(step.outcome)}</em></span></div></li>`
+  ).join('');
+
+  // 4. Roles
+  document.getElementById('ca-roles').innerHTML =
+    (r.roles || []).map(role => `<span class="ca-tag ca-tag-role">${esc(role)}</span>`).join('');
+
+  // 5. Keywords
+  document.getElementById('ca-keywords').innerHTML =
+    (r.keywords || []).map(kw => `<span class="ca-tag ca-tag-kw">${esc(kw)}</span>`).join('');
+}
+
 // PRINT
 // ════════════════════════════════════════════════════════════════
 function printResume() {
@@ -1306,5 +1586,106 @@ addExperience();
 addEducation();
 update();
 </script>
+
+<!-- ── Career Advisor Modal ─────────────────────────────────────── -->
+<div class="ca-modal-backdrop hidden" id="caBackdrop" onclick="handleBackdropClick(event)">
+  <div class="ca-modal" id="caModal">
+
+    <div class="ca-modal-header">
+      <div class="ca-modal-logo">🎯</div>
+      <div class="ca-modal-title">
+        <h2>AI Career Advisor</h2>
+        <p>Senior Career Consultant &amp; Tech Recruiter Analysis</p>
+      </div>
+      <button class="ca-modal-close" onclick="closeAdvisor()" title="Close">✕</button>
+    </div>
+
+    <div class="ca-modal-body">
+      <div class="ca-generate-area">
+        <p>Analyze your resume and get a personalized career report covering skill gaps, role matching, ATS keywords, and a 12-month roadmap.</p>
+        <button class="btn-ca-generate" id="caGenerateBtn" onclick="generateAdvisorReport()">✨ Analyze My Resume</button>
+      </div>
+
+      <!-- Loading state -->
+      <div class="ca-loading hidden" id="caLoading">
+        <div class="ca-loading-spinner"></div>
+        <p>Analyzing your resume with AI…<br><small>This takes about 10–15 seconds.</small></p>
+      </div>
+
+      <!-- Empty / prompt state -->
+      <div class="ca-empty" id="caEmpty">
+        <div style="font-size:2.5rem;margin-bottom:10px">📋</div>
+        <p>Click <strong>Analyze My Resume</strong> above to generate your career report.<br>Make sure your resume has some content filled in first.</p>
+      </div>
+
+      <!-- Report sections -->
+      <div class="ca-report hidden" id="caReport">
+
+        <!-- 1. Optimization -->
+        <div class="ca-section">
+          <div class="ca-section-header">
+            <div class="ca-section-icon" style="background:#fee2e2;">✂️</div>
+            <div>
+              <div class="ca-section-title">1. Resume Optimization</div>
+              <div class="ca-section-subtitle">Items to remove or tighten for a more concise, professional resume</div>
+            </div>
+          </div>
+          <ul class="ca-list" id="ca-optimization"></ul>
+        </div>
+
+        <!-- 2. Skill Gap -->
+        <div class="ca-section">
+          <div class="ca-section-header">
+            <div class="ca-section-icon" style="background:#dbeafe;">📈</div>
+            <div>
+              <div class="ca-section-title">2. Skill Gap Analysis</div>
+              <div class="ca-section-subtitle">High-value skills &amp; certifications to level up your career</div>
+            </div>
+          </div>
+          <ul class="ca-list" id="ca-skillgap"></ul>
+          <div class="ca-tags" id="ca-skillgap-tags" style="margin-top:10px"></div>
+        </div>
+
+        <!-- 3. Roadmap -->
+        <div class="ca-section">
+          <div class="ca-section-header">
+            <div class="ca-section-icon" style="background:#dcfce7;">🗺️</div>
+            <div>
+              <div class="ca-section-title">3. 12-Month Career Roadmap</div>
+              <div class="ca-section-subtitle">Specific courses &amp; steps to develop your profile</div>
+            </div>
+          </div>
+          <ul class="ca-list" id="ca-roadmap"></ul>
+        </div>
+
+        <!-- 4. Role Matching -->
+        <div class="ca-section">
+          <div class="ca-section-header">
+            <div class="ca-section-icon" style="background:#f3e8ff;">💼</div>
+            <div>
+              <div class="ca-section-title">4. Role Matching</div>
+              <div class="ca-section-subtitle">Job titles your resume is currently competitive for</div>
+            </div>
+          </div>
+          <div class="ca-tags" id="ca-roles"></div>
+        </div>
+
+        <!-- 5. ATS Keywords -->
+        <div class="ca-section">
+          <div class="ca-section-header">
+            <div class="ca-section-icon" style="background:#fef9c3;">🔍</div>
+            <div>
+              <div class="ca-section-title">5. ATS Keyword Alignment</div>
+              <div class="ca-section-subtitle">Keywords to add to improve search visibility</div>
+            </div>
+          </div>
+          <div class="ca-tags" id="ca-keywords"></div>
+        </div>
+
+      </div><!-- /ca-report -->
+    </div><!-- /ca-modal-body -->
+  </div><!-- /ca-modal -->
+</div><!-- /ca-backdrop -->
+
 </body>
 </html>
