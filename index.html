@@ -509,6 +509,146 @@ textarea { min-height: 68px; }
   font-size: .84rem; color: var(--muted);
 }
 
+
+/* ─── THEME: Bold Side-Bar (Navy) ───────────────────────── */
+#resume.theme-bold {
+  font-family: var(--rv-font, 'Calibri','Gill Sans',sans-serif);
+  font-size: 10pt; line-height: 1.55; color: #1c2333;
+  display: grid; grid-template-columns: 195px 1fr; min-height: 1123px;
+}
+.theme-bold .resume-sidebar-col {
+  background: #1a1a2e; color: #fff; padding: 34px 18px;
+}
+.theme-bold .resume-main-col { padding: 34px 28px; }
+.theme-bold .r-name { font-size: 18pt; font-weight: 800; color: #fff; line-height: 1.2; margin-bottom: 6px; letter-spacing: -.3px; }
+.theme-bold .r-job-sub { font-size: 9pt; color: #f5a623; font-weight: 600; margin-bottom: 18px; }
+.theme-bold .r-contact-item { display: flex; gap: 7px; font-size: 8pt; color: rgba(255,255,255,.8); margin-bottom: 7px; word-break: break-word; align-items: flex-start; }
+.theme-bold .side-section-title { font-size: 7pt; font-weight: 800; text-transform: uppercase; letter-spacing: .14em; color: #f5a623; padding-bottom: 4px; margin: 18px 0 9px; border-bottom: 1px solid rgba(255,255,255,.15); }
+.theme-bold .r-skill-side { font-size: 8pt; color: rgba(255,255,255,.85); padding: 3px 0; }
+.theme-bold .r-skill-side::before { content: '▸ '; color: #f5a623; }
+.theme-bold h2 { font-size: 8pt; font-weight: 800; text-transform: uppercase; letter-spacing: .12em; color: var(--accent); border-left: 3px solid var(--accent); padding-left: 8px; margin-bottom: 12px; }
+.theme-bold article { margin-bottom: 14px; }
+.theme-bold h3 { font-size: 10.5pt; font-weight: 700; color: #1c2333; }
+.theme-bold .r-company { font-size: 9.5pt; color: var(--accent); font-weight: 600; }
+.theme-bold .r-dates { font-size: 8.5pt; color: #6b7280; white-space: nowrap; background: #f3f4f6; padding: 1px 7px; border-radius: 20px; }
+.theme-bold .r-job-header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px; }
+.theme-bold ul { padding-left: 16px; margin-top: 5px; }
+.theme-bold ul li { font-size: 9pt; color: #374151; margin-bottom: 3px; }
+.theme-bold ul li::marker { color: var(--accent); }
+.theme-bold .r-summary-text { font-size: 9.5pt; color: #4b5563; padding: 10px 12px; background: #f8fafc; border-left: 3px solid var(--accent); border-radius: 0 6px 6px 0; }
+.theme-bold .resume-section { margin-bottom: 18px; }
+.theme-bold .r-degree { font-weight: 700; font-size: 10pt; }
+.theme-bold .r-school { font-size: 9.5pt; color: var(--accent); font-weight: 600; }
+.theme-bold .r-coursework { font-size: 8.5pt; color: #6b7280; margin-top: 2px; }
+.theme-bold .r-edu-header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; }
+
+/* ─── THEME: Compact (Dense single-col) ─────────────────── */
+#resume.theme-compact {
+  padding: 36px 44px;
+  font-family: var(--rv-font, 'Arial','Helvetica',sans-serif);
+  font-size: 9.5pt; line-height: 1.45; color: #1c2333;
+}
+.theme-compact header { display: grid; grid-template-columns: 1fr auto; align-items: start; gap: 12px; border-bottom: 2px solid var(--accent); padding-bottom: 10px; margin-bottom: 14px; }
+.theme-compact .r-name { font-size: 21pt; font-weight: 800; color: #111; letter-spacing: -.5px; line-height: 1.1; }
+.theme-compact .r-contact { display: flex; flex-direction: column; gap: 3px; font-size: 8pt; color: #555; text-align: right; }
+.theme-compact .r-contact span::before { content: attr(data-icon) ' '; }
+.theme-compact section { margin-bottom: 13px; }
+.theme-compact h2 { font-size: 7.5pt; font-weight: 800; text-transform: uppercase; letter-spacing: .13em; color: #fff; background: var(--accent); padding: 2px 8px; display: inline-block; margin-bottom: 8px; }
+.theme-compact h3 { font-size: 9.5pt; font-weight: 700; color: #1c2333; }
+.theme-compact .r-company { font-size: 9pt; color: var(--accent); font-weight: 600; }
+.theme-compact .r-dates { font-size: 8pt; color: #6b7280; }
+.theme-compact .r-job-header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 2px; }
+.theme-compact article { margin-bottom: 10px; }
+.theme-compact ul { padding-left: 14px; margin-top: 3px; }
+.theme-compact ul li { font-size: 8.5pt; color: #374151; margin-bottom: 1px; }
+.theme-compact ul li::marker { color: var(--accent); }
+.theme-compact .r-summary p { font-size: 9pt; color: #374151; }
+.theme-compact .r-edu-header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; }
+.theme-compact .r-degree { font-weight: 700; font-size: 9.5pt; }
+.theme-compact .r-school { font-size: 9pt; color: var(--accent); font-weight: 600; }
+.theme-compact .r-coursework { font-size: 8pt; color: #6b7280; margin-top: 1px; }
+.theme-compact .r-skills-grid { display: flex; flex-wrap: wrap; gap: 4px; }
+.theme-compact .r-skill-tag { background: var(--accent-light); color: var(--accent); border: 1px solid color-mix(in srgb,var(--accent) 30%,transparent); padding: 1px 8px; border-radius: 3px; font-size: 8pt; font-weight: 500; }
+
+/* ─── THEME: Creative (Teal accent, elegant) ─────────────── */
+#resume.theme-creative {
+  padding: 52px 58px;
+  font-family: var(--rv-font, 'Lato','Helvetica Neue',sans-serif);
+  font-size: 10pt; line-height: 1.6; color: #2d3748;
+}
+.theme-creative header { margin-bottom: 22px; position: relative; padding-bottom: 18px; }
+.theme-creative header::after { content: ''; display: block; position: absolute; bottom: 0; left: 0; width: 60px; height: 3px; background: var(--accent); border-radius: 2px; }
+.theme-creative .r-name { font-size: 28pt; font-weight: 300; color: #1a202c; letter-spacing: -1px; margin-bottom: 4px; }
+.theme-creative .r-name strong { font-weight: 800; color: var(--accent); }
+.theme-creative .r-contact { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 8.5pt; color: #718096; }
+.theme-creative .r-contact span::before { content: attr(data-icon) ' '; }
+.theme-creative section { margin-bottom: 22px; }
+.theme-creative h2 { font-size: 11pt; font-weight: 800; color: #1a202c; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.theme-creative h2::after { content: ''; flex: 1; height: 1px; background: #e2e8f0; }
+.theme-creative h3 { font-size: 10.5pt; font-weight: 700; color: #2d3748; }
+.theme-creative .r-company { font-size: 10pt; color: var(--accent); font-weight: 600; }
+.theme-creative .r-dates { font-size: 8.5pt; color: #a0aec0; font-style: italic; }
+.theme-creative .r-job-header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 3px; }
+.theme-creative article { margin-bottom: 14px; }
+.theme-creative ul { padding-left: 18px; margin-top: 5px; }
+.theme-creative ul li { font-size: 9.5pt; color: #4a5568; margin-bottom: 3px; }
+.theme-creative ul li::marker { color: var(--accent); }
+.theme-creative .r-summary p { font-size: 10pt; color: #4a5568; }
+.theme-creative .r-edu-header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; }
+.theme-creative .r-degree { font-weight: 700; font-size: 10.5pt; }
+.theme-creative .r-school { font-size: 10pt; color: var(--accent); font-weight: 600; }
+.theme-creative .r-coursework { font-size: 8.5pt; color: #a0aec0; margin-top: 2px; }
+.theme-creative .r-skills-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+.theme-creative .r-skill-tag { background: none; color: var(--accent); border: 1.5px solid var(--accent); padding: 3px 12px; border-radius: 30px; font-size: 9pt; font-weight: 600; }
+
+/* ─── THEME: Timeline (left-rail accent) ────────────────── */
+#resume.theme-timeline {
+  padding: 48px 54px 48px 70px;
+  font-family: var(--rv-font, 'Calibri','Gill Sans',sans-serif);
+  font-size: 10pt; line-height: 1.55; color: #2d3748; position: relative;
+}
+.theme-timeline::before { content: ''; position: absolute; left: 36px; top: 0; bottom: 0; width: 2px; background: linear-gradient(to bottom, var(--accent), transparent); }
+.theme-timeline header { margin-bottom: 20px; padding-left: 0; }
+.theme-timeline .r-name { font-size: 24pt; font-weight: 700; color: #1a202c; letter-spacing: -.4px; margin-bottom: 5px; }
+.theme-timeline .r-contact { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 8.5pt; color: #718096; }
+.theme-timeline .r-contact span::before { content: attr(data-icon) ' '; }
+.theme-timeline section { margin-bottom: 20px; }
+.theme-timeline h2 { font-size: 8.5pt; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--accent); margin-bottom: 10px; position: relative; }
+.theme-timeline h2::before { content: '●'; position: absolute; left: -38px; color: var(--accent); font-size: 10pt; top: -1px; }
+.theme-timeline article { margin-bottom: 14px; padding-left: 0; position: relative; }
+.theme-timeline article::before { content: '○'; position: absolute; left: -38px; color: var(--accent); font-size: 8pt; top: 3px; }
+.theme-timeline h3 { font-size: 10.5pt; font-weight: 700; color: #1a202c; }
+.theme-timeline .r-company { font-size: 9.5pt; color: var(--accent); font-weight: 600; }
+.theme-timeline .r-dates { font-size: 8.5pt; color: #a0aec0; }
+.theme-timeline .r-job-header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 3px; }
+.theme-timeline ul { padding-left: 16px; margin-top: 4px; }
+.theme-timeline ul li { font-size: 9.5pt; color: #4a5568; margin-bottom: 2px; }
+.theme-timeline ul li::marker { color: var(--accent); }
+.theme-timeline .r-summary p { font-size: 9.5pt; color: #4a5568; }
+.theme-timeline .r-edu-header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; }
+.theme-timeline .r-degree { font-weight: 700; font-size: 10.5pt; }
+.theme-timeline .r-school { font-size: 10pt; color: var(--accent); font-weight: 600; }
+.theme-timeline .r-coursework { font-size: 8.5pt; color: #a0aec0; margin-top: 2px; }
+.theme-timeline .r-skills-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+.theme-timeline .r-skill-tag { background: var(--accent-light); color: var(--accent); border: 1px solid color-mix(in srgb,var(--accent) 30%,transparent); padding: 2px 10px; border-radius: 4px; font-size: 9pt; font-weight: 500; }
+
+/* ─── THEME Switcher — add label text ───────────────────── */
+.theme-picker { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+.theme-btn-wrap { display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; }
+.theme-btn-wrap span { font-size: .55rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .03em; white-space: nowrap; }
+.theme-btn-wrap .theme-btn { margin: 0; }
+
+/* Apply-to-resume button in advisor */
+.btn-ca-apply {
+  font-size: .68rem; padding: 3px 9px; border-radius: 5px;
+  background: #dcfce7; color: #166534; border: 1px solid #bbf7d0;
+  cursor: pointer; font-weight: 600; transition: background .15s; white-space: nowrap; flex-shrink: 0;
+}
+.btn-ca-apply:hover { background: #bbf7d0; }
+.btn-ca-apply.applied { background: #f0fdf4; color: #86efac; cursor: default; border-color: #86efac; }
+.ca-list li { justify-content: space-between; }
+.ca-list li .li-content { flex: 1; }
+
 </style>
 </head>
 <body>
@@ -546,10 +686,16 @@ textarea { min-height: 68px; }
 
   <div class="ctrl-group">
     <span class="ctrl-label">Layout</span>
-    <button class="theme-btn active" id="tb-classic"    style="background:#1a5c8b"                                          title="Classic"      onclick="setTheme('classic')"></button>
-    <button class="theme-btn"        id="tb-modern"     style="background:linear-gradient(135deg,#1a5c8b 50%,#e2e5ea 50%)" title="Modern"       onclick="setTheme('modern')"></button>
-    <button class="theme-btn"        id="tb-executive"  style="background:#111"                                             title="Executive"    onclick="setTheme('executive')"></button>
-    <button class="theme-btn"        id="tb-minimal"    style="background:#e5e7eb;border:1px solid #ccc"                    title="Minimal"      onclick="setTheme('minimal')"></button>
+    <select class="ctrl-select" id="themeSelect" onchange="setTheme(this.value)" style="min-width:118px">
+      <option value="classic">🔵 Classic</option>
+      <option value="modern">◧ Modern (2-col)</option>
+      <option value="bold">🌑 Bold Sidebar</option>
+      <option value="executive">⬛ Executive</option>
+      <option value="creative">✦ Creative</option>
+      <option value="timeline">⏱ Timeline</option>
+      <option value="compact">▤ Compact</option>
+      <option value="minimal">□ Minimal</option>
+    </select>
   </div>
 
   <div class="topbar-divider"></div>
@@ -719,13 +865,13 @@ function setTheme(t) {
   currentTheme = t;
   const resume = document.getElementById('resume');
   resume.className = 'theme-' + t;
-  document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('tb-' + t).classList.add('active');
-  if (t === 'executive') {
-    const fs = document.getElementById('fontSelect');
-    if (fs.value.includes('Calibri') || fs.value.includes('Arial')) {
-      fs.value = "Georgia,'Times New Roman',serif";
-    }
+  // Keep dropdown in sync
+  const sel = document.getElementById('themeSelect');
+  if (sel && sel.value !== t) sel.value = t;
+  // Auto-switch font for serif themes
+  const fs = document.getElementById('fontSelect');
+  if (t === 'executive' && (fs.value.includes('Calibri') || fs.value.includes('Arial'))) {
+    fs.value = "Georgia,'Times New Roman',serif";
   }
   update();
 }
@@ -1135,7 +1281,7 @@ document.getElementById('diffPopup').addEventListener('click', function(e) {
 // LIVE PREVIEW RENDERER
 // ══════════════════════════════════════════════════════════════════
 function update() {
-  if (currentTheme === 'modern') renderModern();
+  if (currentTheme === 'modern' || currentTheme === 'bold') renderModern();
   else renderStandard();
 }
 
@@ -1255,10 +1401,13 @@ function renderModern() {
     ln    ? `<div class="r-contact-item"><span class="r-contact-icon">🔗</span><a href="${esc(ln)}" target="_blank" rel="noopener" style="color:rgba(255,255,255,.88);word-break:break-all">${esc(ln.replace(/^https?:\/\//, ''))}</a></div>` : '',
   ].filter(Boolean).join('') || ph('Add contact info');
 
+  const isBold = currentTheme === 'bold';
+  const jobTitleLine = isBold ? `<div class="r-job-sub">${esc(val('exp-title-1') || 'IT Professional')}</div>` : '';
   document.getElementById('resume').innerHTML = `
     <div class="resume-sidebar-col" role="complementary" aria-label="Contact and skills">
       <div class="r-name">${esc(name)}</div>
-      <div style="margin-top:16px">${contactItems}</div>
+      ${jobTitleLine}
+      <div style="margin-top:${isBold?'0':'16px'}">${contactItems}</div>
       <div class="side-section-title">Skills</div>
       ${buildSkillTags('side')}
     </div>
@@ -1527,37 +1676,112 @@ ${resumeText}`;
   }
 }
 
+// ── Apply advisor suggestions to resume fields ──────────────────
+function applySkillToResume(skill, btnEl) {
+  const skillsEl = document.getElementById('skills');
+  if (!skillsEl) return;
+  const current = skillsEl.value.trim();
+  // Check if already present (case-insensitive)
+  const already = current.toLowerCase().split(',').map(s=>s.trim()).includes(skill.toLowerCase());
+  if (already) {
+    btnEl.textContent = '✓ Already there';
+    btnEl.classList.add('applied');
+    return;
+  }
+  skillsEl.value = current ? current + ', ' + skill : skill;
+  skillsEl.dispatchEvent(new Event('input'));
+  btnEl.textContent = '✓ Added';
+  btnEl.classList.add('applied');
+  // Flash the skills field
+  skillsEl.style.transition = 'box-shadow .3s';
+  skillsEl.style.boxShadow = '0 0 0 3px rgba(22,163,74,.3)';
+  setTimeout(() => { skillsEl.style.boxShadow = ''; }, 1200);
+  update();
+}
+
+function applyKeywordToResume(kw, btnEl) {
+  applySkillToResume(kw, btnEl); // keywords go into skills too
+}
+
+function applyRoleToSummary(role, btnEl) {
+  const sumEl = document.getElementById('summary');
+  if (!sumEl) return;
+  const current = sumEl.value.trim();
+  if (current.toLowerCase().includes(role.toLowerCase())) {
+    btnEl.textContent = '✓ In summary';
+    btnEl.classList.add('applied');
+    return;
+  }
+  // Prepend a sentence mentioning the target role
+  const insert = 'Targeting ' + role + ' roles. ';
+  sumEl.value = current ? insert + current : insert;
+  sumEl.dispatchEvent(new Event('input'));
+  btnEl.textContent = '✓ Added to summary';
+  btnEl.classList.add('applied');
+  sumEl.style.transition = 'box-shadow .3s';
+  sumEl.style.boxShadow = '0 0 0 3px rgba(37,99,235,.3)';
+  setTimeout(() => { sumEl.style.boxShadow = ''; }, 1200);
+  update();
+}
+
 function renderAdvisorReport(r) {
   document.getElementById('caLoading').classList.add('hidden');
   document.getElementById('caReport').classList.remove('hidden');
 
-  // 1. Optimization
+  // 1. Optimization — show the issue + reason, no apply btn (these are removals)
   const optEl = document.getElementById('ca-optimization');
   optEl.innerHTML = (r.optimization || []).map(o =>
-    `<li data-icon="✂️"><div><strong>${esc(o.issue)}</strong><br><span style="color:var(--muted);font-size:.77rem">${esc(o.reason)}</span></div></li>`
-  ).join('') || '<li data-icon="✅">Resume looks well-optimized!</li>';
+    `<li data-icon="✂️">
+      <div class="li-content">
+        <strong>${esc(o.issue)}</strong><br>
+        <span style="color:var(--muted);font-size:.77rem">${esc(o.reason)}</span>
+      </div>
+    </li>`
+  ).join('') || '<li data-icon="✅"><div class="li-content">Resume looks well-optimized!</div></li>';
 
-  // 2. Skill Gap
+  // 2. Skill Gap — "+ Add to Skills" button
   const sgEl = document.getElementById('ca-skillgap');
-  sgEl.innerHTML = (r.skillGap || []).map(s =>
-    `<li data-icon="📈"><div><strong>${esc(s.skill)}</strong> <span class="ca-tag ca-tag-add" style="font-size:.68rem;padding:1px 7px">${esc(s.level)}</span><br><span style="color:var(--muted);font-size:.77rem">${esc(s.why)}</span></div></li>`
+  sgEl.innerHTML = (r.skillGap || []).map((s, i) =>
+    `<li data-icon="📈">
+      <div class="li-content">
+        <strong>${esc(s.skill)}</strong>
+        <span class="ca-tag ca-tag-add" style="font-size:.66rem;padding:1px 6px;margin-left:4px">${esc(s.level)}</span><br>
+        <span style="color:var(--muted);font-size:.77rem">${esc(s.why)}</span>
+      </div>
+      <button class="btn-ca-apply" id="sg-btn-${i}" onclick="applySkillToResume('${s.skill.replace(/'/g,"\'")}', this)">+ Add to Skills</button>
+    </li>`
   ).join('');
   document.getElementById('ca-skillgap-tags').innerHTML =
     (r.skillGap || []).map(s => `<span class="ca-tag ca-tag-add">${esc(s.skill)}</span>`).join('');
 
-  // 3. Roadmap
+  // 3. Roadmap — no direct apply (these are long-term steps)
   const rmEl = document.getElementById('ca-roadmap');
   rmEl.innerHTML = (r.roadmap || []).map(step =>
-    `<li data-icon="🗓️"><div><strong>${esc(step.month)}:</strong> ${esc(step.action)}<br><span style="color:var(--muted);font-size:.77rem">📍 ${esc(step.platform)} — <em>${esc(step.outcome)}</em></span></div></li>`
+    `<li data-icon="🗓️">
+      <div class="li-content">
+        <strong>${esc(step.month)}:</strong> ${esc(step.action)}<br>
+        <span style="color:var(--muted);font-size:.77rem">📍 ${esc(step.platform)} — <em>${esc(step.outcome)}</em></span>
+      </div>
+    </li>`
   ).join('');
 
-  // 4. Roles
+  // 4. Roles — "Add to Summary" button for each
   document.getElementById('ca-roles').innerHTML =
-    (r.roles || []).map(role => `<span class="ca-tag ca-tag-role">${esc(role)}</span>`).join('');
+    (r.roles || []).map((role, i) =>
+      `<span style="display:inline-flex;align-items:center;gap:5px;margin:3px 0">
+        <span class="ca-tag ca-tag-role">${esc(role)}</span>
+        <button class="btn-ca-apply" id="role-btn-${i}" style="font-size:.62rem;padding:2px 7px" onclick="applyRoleToSummary('${role.replace(/'/g,"\'")}', this)">→ Summary</button>
+      </span>`
+    ).join('');
 
-  // 5. Keywords
+  // 5. Keywords — "+ Add to Skills" on each tag
   document.getElementById('ca-keywords').innerHTML =
-    (r.keywords || []).map(kw => `<span class="ca-tag ca-tag-kw">${esc(kw)}</span>`).join('');
+    (r.keywords || []).map((kw, i) =>
+      `<span style="display:inline-flex;align-items:center;gap:4px;margin:3px 0">
+        <span class="ca-tag ca-tag-kw">${esc(kw)}</span>
+        <button class="btn-ca-apply" id="kw-btn-${i}" style="font-size:.62rem;padding:2px 7px" onclick="applyKeywordToResume('${kw.replace(/'/g,"\'")}', this)">+ Skills</button>
+      </span>`
+    ).join('');
 }
 
 // PRINT
